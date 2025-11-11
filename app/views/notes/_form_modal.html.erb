@@ -1,0 +1,13 @@
+<div class="modal-backdrop" style="display:flex" id="modal-backdrop">
+  <div class="modal">
+    <h3 style="margin-top:0;">Edit Note</h3>
+    <%= form_with(model: note, html: { class: "form-grid" }) do |f| %>
+      <p><%= f.text_field :title, class: "input" %></p>
+      <p><%= f.text_area :content, class: "input" %></p>
+      <div style="display:flex; gap:10px;">
+        <%= f.submit "Save Changes", class: "btn btn-primary" %>
+        <button type="button" class="btn btn-ghost" onclick="document.getElementById('modal').innerHTML=''">Close</button>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="auth-page" style="min-height:100vh; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(11,16,38,0.6), rgba(15,23,42,0.8)), url('<%= (asset_path(\"auth-bg.jpg\") rescue asset_path(\"apple-touch-icon.png\")) %>') center / cover no-repeat fixed;">
+  <div class="auth-wrap">
+    <div class="panel auth-card">
+    <h2 class="auth-title">Join NotesApp</h2>
+    <p class="auth-subtitle">Create your account</p>
+
+    <%= form_with model: resource, scope: resource_name, url: registration_path(resource_name), html: { class: "form-grid" } do |f| %>
+      <p>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email", class: "input" %>
+      </p>
+      <p>
+        <%= f.password_field :password, autocomplete: "new-password", placeholder: "Password", class: "input" %>
+      </p>
+      <p>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirm Password", class: "input" %>
+      </p>
+
+      <div style="display:flex; justify-content:flex-end;">
+        <%= f.submit "Sign up", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+
+    <div style="margin-top:12px; text-align:center;">
+      <span class="muted">Already have an account?</span>
+      <%= link_to "Sign In", new_session_path(resource_name) %>
+    </div>
+    </div>
+  </div>
+</div>

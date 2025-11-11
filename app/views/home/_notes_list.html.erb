@@ -1,0 +1,11 @@
+<% notes.each do |note| %>
+  <div class="card">
+    <h3><%= note.title %></h3>
+    <div class="muted"><%= simple_format(note.content) %></div>
+    <div style="margin-top:10px;">
+      <%= link_to "Edit", edit_note_path(note), class: "btn btn-ghost", data: { turbo_frame: "modal" } %>
+      <button class="btn btn-danger" onclick="openDeleteModal(<%= note.id %>, '<%= j note.title %>')">Delete</button>
+    </div>
+  </div>
+<% end %>
+

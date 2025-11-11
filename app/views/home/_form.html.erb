@@ -1,0 +1,17 @@
+<%= form_with(model: note, html: { class: "form-grid" }) do |f| %>
+  <% if note.errors.any? %>
+    <div class="flash flash-alert">
+      <% note.errors.full_messages.each do |msg| %>
+        <div><%= msg %></div>
+      <% end %>
+    </div>
+  <% end %>
+  <p>
+    <%= f.text_field :title, placeholder: "Add title", class: "input" %>
+  </p>
+  <p>
+    <%= f.text_area :content, placeholder: "Add notes", class: "input" %>
+  </p>
+  <%= f.submit "Add Note", class: "btn btn-primary" %>
+<% end %>
+

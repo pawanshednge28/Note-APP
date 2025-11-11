@@ -1,0 +1,28 @@
+<div class="auth-wrap">
+  <div class="panel auth-card">
+    <h2 class="auth-title">Keep Your Notes Safe And Secure</h2>
+    <p class="auth-subtitle">Login</p>
+
+    <%= form_with scope: resource_name, url: session_path(resource_name), html: { class: "form-grid" } do |f| %>
+      <p>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email", class: "input" %>
+      </p>
+      <p>
+        <%= f.password_field :password, autocomplete: "current-password", placeholder: "Password", class: "input" %>
+      </p>
+
+      <div class="auth-actions">
+        <label style="display:flex; gap:8px; align-items:center; color: var(--muted);">
+          <%= f.check_box :remember_me %> Remember me
+        </label>
+        <%= f.submit "Sign in", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+
+    <div style="margin-top:12px; text-align:center;">
+      <span class="muted">Don't have an account?</span>
+      <%= link_to "Sign Up", new_registration_path(resource_name) %>
+    </div>
+  </div>
+</div>
+
