@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: notesapp
+    env: ruby
+    buildCommand: bundle install && bundle exec rake assets:precompile db:migrate
+    startCommand: bundle exec puma -C config/puma.rb
+    autoDeploy: true
