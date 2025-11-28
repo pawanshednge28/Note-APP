@@ -1,11 +1,17 @@
-<% notes.each do |note| %>
-  <div class="card">
-    <h3><%= note.title %></h3>
-    <div class="muted"><%= simple_format(note.content) %></div>
-    <div style="margin-top:10px;">
-      <%= link_to "Edit", edit_note_path(note), class: "btn btn-ghost", data: { turbo_frame: "modal" } %>
-      <button class="btn btn-danger" onclick="openDeleteModal(<%= note.id %>, '<%= j note.title %>')">Delete</button>
-    </div>
+<% if notes.blank? %>
+  <div class="empty-state">No notes yet. Create your first note above.</div>
+<% else %>
+  <div class="notes-grid">
+    <% notes.each do |note| %>
+      <div class="note-card">
+        <h3><%= note.title %></h3>
+        <div class="muted"><%= simple_format(note.content) %></div>
+        <div class="note-meta">Updated <%= time_ago_in_words(note.updated_at) %> ago</div>
+        <div style="margin-top:10px;">
+          <%= link_to "Edit", edit_note_path(note), class: "btn btn-ghost", data: { turbo_frame: "modal" } %>
+          <button class="btn btn-danger" onclick="openDeleteModal(<%= note.id %>, '<%= j note.title %>')">Delete</button>
+        </div>
+      </div>
+    <% end %>
   </div>
 <% end %>
-

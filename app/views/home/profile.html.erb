@@ -1,0 +1,134 @@
+<style>
+  body {
+    background: url('/assets/img2.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  .profile-card {
+    max-width: 500px;
+    margin: 80px auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    padding: 30px 40px;
+    text-align: center;
+    position: relative;
+  }
+
+  .profile-img-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+
+  .profile-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #007bff;
+  }
+
+  .edit-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #007bff;
+    border-radius: 50%;
+    padding: 6px;
+    cursor: pointer;
+    border: 2px solid white;
+    transition: background 0.3s;
+  }
+
+  .edit-icon:hover {
+    background: #0056b3;
+  }
+
+  .edit-icon i {
+    color: white;
+    font-size: 14px;
+  }
+
+  .form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+
+  .btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .btn:hover { background-color: #0056b3; }
+  .btn-back { background: #6c757d; }
+  .btn-back:hover { background: #555; }
+
+  input[type="file"] {
+    display: none;
+  }
+</style>
+
+<div class="profile-card">
+  <h2>Edit Profile</h2>
+
+  <div class="profile-img-wrapper">
+    <% if @user.avatar.attached? %>
+      <%= image_tag @user.avatar, id: "avatarPreview", class: "profile-img" %>
+    <% else %>
+      <img id="avatarPreview" src="/assets/default-avatar.png" alt="Profile" class="profile-img">
+    <% end %>
+
+    <label for="user_avatar" class="edit-icon">
+      <i class="fa fa-pencil"></i>
+    </label>
+  </div>
+
+  <%= form_with model: @user, url: profile_path, method: :patch, local: true, html: { class: "form-grid", enctype: "multipart/form-data" } do |f| %>
+    <div>
+      <%= f.label :email, style: "font-weight: bold;" %>
+      <input type="text" value="<%= @user.email %>" disabled class="input" />
+    </div>
+
+    <div>
+      <%= f.label :name, "Username", style: "font-weight: bold;" %>
+      <%= f.text_field :name, class: "input", placeholder: "Enter your name" %>
+    </div>
+
+    <div>
+      <%= f.file_field :avatar, accept: "image/*", id: "user_avatar", onchange: "previewAvatar(event)" %>
+    </div>
+
+    <%= f.submit "Save Changes", class: "btn" %>
+  <% end %>
+
+  <%= link_to "← Back to Notes", root_path, class: "btn btn-back", style: "margin-top:15px; display:inline-block;" %>
+</div>
+
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script>
+  function previewAvatar(event) {
+    const reader = new FileReader();
+    reader.onload = function() {
+      document.getElementById('avatarPreview').src = reader.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  }
+</script>

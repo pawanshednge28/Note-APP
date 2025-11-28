@@ -15,5 +15,7 @@ Rails.application.routes.draw do
   resources :notes do
     delete :delete_all, on: :collection
   end
-  
+  get "profile", to: "home#profile"
+patch "profile", to: "home#update_profile"
+
 end

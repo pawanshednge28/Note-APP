@@ -1,27 +1,30 @@
-<div class="auth-wrap">
-  <div class="panel auth-card">
-    <h2 class="auth-title">Keep Your Notes Safe And Secure</h2>
-    <p class="auth-subtitle">Login</p>
+<div style="display:flex; min-height:100vh; width:100%;">
+  <div style="flex:1; background-image:url('<%= asset_path('img2.jpg') %>'); background-size:cover; background-position:center;"></div>
+  <div style="flex:1; display:flex; align-items:center; justify-content:center; padding:32px;">
+    <div class="auth-form-card" style="width:100%; max-width:420px;">
+      <h2 class="auth-title" style="font-size:28px;">Welcome back to NotesApp</h2>
+      <p class="auth-subtitle">Log in to manage your notes</p>
 
-    <%= form_with scope: resource_name, url: session_path(resource_name), html: { class: "form-grid" } do |f| %>
-      <p>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email", class: "input" %>
-      </p>
-      <p>
-        <%= f.password_field :password, autocomplete: "current-password", placeholder: "Password", class: "input" %>
-      </p>
+      <%= form_with scope: resource_name, url: session_path(resource_name), html: { class: "form-grid" } do |f| %>
+        <p>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email", class: "input" %>
+        </p>
+        <p>
+          <%= f.password_field :password, autocomplete: "current-password", placeholder: "Password", class: "input" %>
+        </p>
 
-      <div class="auth-actions">
-        <label style="display:flex; gap:8px; align-items:center; color: var(--muted);">
-          <%= f.check_box :remember_me %> Remember me
-        </label>
-        <%= f.submit "Sign in", class: "btn btn-primary" %>
+        <div class="auth-actions">
+          <label style="display:flex; gap:8px; align-items:center; color: var(--muted);">
+            <%= f.check_box :remember_me %> Remember me
+          </label>
+          <%= f.submit "Sign In", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+
+      <div style="margin-top:20px; text-align:center;">
+        <span class="muted" style="color:#64748b;">New to NotesApp?</span>
+        <%= link_to "Create an account", new_registration_path(resource_name) %>
       </div>
-    <% end %>
-
-    <div style="margin-top:12px; text-align:center;">
-      <span class="muted">Don't have an account?</span>
-      <%= link_to "Sign Up", new_registration_path(resource_name) %>
     </div>
   </div>
 </div>

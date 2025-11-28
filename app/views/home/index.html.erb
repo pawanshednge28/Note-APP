@@ -1,24 +1,213 @@
-<h2>Welcome to Notes</h2>
+<style>
+  body {
+    background: url('/assets/img2.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
 
-<turbo-frame id="new_note_form">
-  <%= render partial: "home/form", locals: { note: @note } %>
-</turbo-frame>
+  .page-wrap {
+    max-width: 900px;
+    margin: 60px auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    padding: 40px 50px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+  }
 
-<hr>
- 
-<h3>Your Notes</h3>
-<turbo-frame id="notes_list">
-  <%= render partial: "home/notes_list", locals: { notes: @notes } %>
-</turbo-frame>
+  .section-title {
+    font-size: 28px;
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 40px;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+
+  .input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+  }
+
+  .btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .btn:hover { background-color: #0056b3; }
+  .btn-danger { background-color: #dc3545; }
+  .btn-danger:hover { background-color: #b02a37; }
+  .btn-ghost {
+    background: forestgreen;
+    border: 1px solid #black;
+    color: black;
+  }
+  .btn-ghost:hover { background: rgba(255, 255, 255, 0.2); }
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 700px;
+    margin: 0 auto 20px auto;
+  }
+
+  .toolbar h3 {
+    color: #fff;
+    margin: 0;
+    font-size: 22px;
+  }
+
+  .empty-state {
+    text-align: center;
+    color: #eee;
+    padding: 20px;
+    font-style: italic;
+  }
+
+  /* Notes Grid */
+  .notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    justify-content: center;
+    max-width: 750px;
+    margin: 0 auto;
+  }
+
+  .note-card {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .note-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  }
+
+  .note-card h3 {
+    margin: 0 0 8px 0;
+    color: #222;
+  }
+
+  .muted {
+    color: #555;
+    font-size: 14px;
+  }
+
+  .note-meta {
+    font-size: 12px;
+    color: #777;
+    margin-top: 8px;
+  }
+
+  /* Modal */
+  #deleteModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  #deleteModal .modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    text-align: center;
+    width: 320px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  }
+
+  #deleteModal button {
+    margin: 8px;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  #deleteModal .confirm {
+    background: red;
+    color: white;
+  }
+
+  #deleteModal .cancel {
+    background: #ddd;
+  }
+</style>
+
+<div class="page-wrap">
+  <h3 class="section-title">Add a New Note</h3>
+  <turbo-frame id="new_note_form">
+    <%= render partial: "home/form", locals: { note: @note } %>
+  </turbo-frame>
+
+  <div class="toolbar">
+    <h3>Your Notes</h3>
+    <%= link_to "Refresh", root_path, class: "btn btn-ghost" %>
+  </div>
+
+  <turbo-frame id="notes_list">
+    <%= render partial: "home/notes_list", locals: { notes: @notes } %>
+  </turbo-frame>
+</div>
+
 <turbo-frame id="modal"></turbo-frame>
 
+<!-- Delete confirmation modal -->
+<div id="deleteModal">
+  <div class="modal-content">
+    <h3>Confirm Delete</h3>
+    <p id="deleteText"></p>
+    <form id="deleteForm" method="post" data-turbo="false">
+      <input type="hidden" name="_method" value="delete">
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <button type="submit" class="confirm">Yes, Delete</button>
+      <button type="button" class="cancel" onclick="closeDeleteModal()">Cancel</button>
+    </form>
+  </div>
+</div>
+
 <script>
-  // Close modal when Turbo navigation finishes
   document.addEventListener("turbo:submit-end", () => {
     document.getElementById("modal").innerHTML = "";
   });
- document.addEventListener("turbo:load", () => {
-    // On every page load, ensure modal is closed
+
+  document.addEventListener("turbo:load", () => {
     closeDeleteModal();
   });
 
@@ -33,23 +222,3 @@
     document.getElementById('deleteModal').style.display = 'none';
   }
 </script>
-
-<!-- Delete confirmation modal -->
-<div id="deleteModal" style="display:none; 
-  position:fixed; top:0; left:0; width:100%; height:100%;
-  background:rgba(0,0,0,0.6); justify-content:center; align-items:center;">
-  <div style="background:white; padding:20px; border-radius:10px; width:300px; text-align:center;">
-    <h3>Confirm Delete</h3>
-    <p id="deleteText"></p>
-    <div style="margin-top:15px;">
-     <form id="deleteForm" method="post" data-turbo="false">
-  <input type="hidden" name="_method" value="delete">
-  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-  <button type="submit" style="background:red; color:white;">Yes, Delete</button>
-  <button type="button" onclick="closeDeleteModal()">Cancel</button>
-</form>
-
-
-    </div>
-  </div>
-</div>
