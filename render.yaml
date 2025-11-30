@@ -1,7 +1,21 @@
+databases:
+  - name: noteapp-db
+    databaseName: noteapp
+    user: noteapp
+    plan: free
+
 services:
   - type: web
-    name: notesapp
-    env: ruby
-    buildCommand: bundle install && bundle exec rake assets:precompile db:migrate
-    startCommand: bundle exec puma -C config/puma.rb
-    autoDeploy: true
+    name: noteapp
+    runtime: ruby
+    plan: free
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec rails server -p $PORT"
+    envVars:
+      - fromDatabase:
+          name: noteapp-db
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: WEB_CONCURRENCY
+        value: "2"
